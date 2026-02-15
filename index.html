@@ -1,0 +1,801 @@
+import React, { useState } from 'react';
+import { Shield, ShieldCheck, Lock, Save, Globe, UserCheck, HelpCircle, CheckCircle, AlertTriangle, Monitor, FileText, ChevronRight, Sparkles, MessageSquare, AlertOctagon, Loader2, Package } from 'lucide-react';
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('diagnosis');
+
+  const tabs = [
+    { id: 'diagnosis', label: '사이버보안진단', icon: <Shield size={18} /> },
+    { id: 'pc', label: 'PC 보안관리', icon: <Monitor size={18} /> },
+    { id: 'storage', label: '저장매체 보안', icon: <Save size={18} /> },
+    { id: 'homepage', label: '홈페이지 보안', icon: <Globe size={18} /> },
+    { id: 'privacy', label: '개인정보보호', icon: <UserCheck size={18} /> },
+    { id: 'ai-assistant', label: 'AI 보안 비서', icon: <Sparkles size={18} className="text-[#EA580C]" /> }, // New Tab
+    { id: 'quiz', label: '이해도 점검', icon: <HelpCircle size={18} /> },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FAFAF9] text-[#1C1917]" style={{ fontFamily: "'Google Sans', 'Noto Sans KR', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+      `}</style>
+      
+      {/* Header - Warm Orange Gradient matching the school logo/title feel */}
+      <header className="bg-gradient-to-r from-[#EA580C] to-[#D97706] text-white p-8 shadow-lg mb-6 rounded-b-xl">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="text-[#FEF3C7] font-medium mb-2 opacity-90" style={{ fontSize: '0.96rem' }}>
+            "정보보안, 우리 아이들의 꿈을 지키는 가장 튼튼한 울타리입니다."
+          </p>
+          <div className="flex justify-center items-center gap-3 mb-2">
+            <ShieldCheck size={40} className="text-[#FEF3C7]" />
+            <h1 className="text-3xl font-bold tracking-tight">2026년 월간 호남고 정보보안 및 개인정보보호 교육</h1>
+          </div>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-2">
+            <p className="text-[#FFF7ED] text-lg font-medium">호남고등학교 전 직원 필수 교육과정</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <a 
+                href="https://docs.google.com/spreadsheets/d/1mTmxOJX5klnoUO9qlqiyf_530ImLEPkKkBZ-7oRG6pQ/edit?gid=69098270#gid=69098270" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white text-[#EA580C] px-4 py-2 rounded-full font-bold text-sm hover:bg-[#FEF3C7] transition-colors shadow-md flex items-center gap-2 animate-pulse hover:animate-none"
+              >
+                <CheckCircle size={16} />
+                연수 출석체크
+              </a>
+              <a 
+                href="https://docs.google.com/spreadsheets/d/1xJ3E9Df5OzWfL44Y5nxtzOweHG0mQAY4HlcZQutrzv0/edit?gid=317519669#gid=317519669" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white text-[#EA580C] px-4 py-2 rounded-full font-bold text-sm hover:bg-[#FEF3C7] transition-colors shadow-md flex items-center gap-2"
+              >
+                <Package size={16} />
+                월간 소모품 자동 신청
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Navigation */}
+      <div className="max-w-6xl mx-auto px-4 mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-2 flex flex-wrap gap-2 justify-center border border-[#E7E5E4]">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-[#EA580C] text-white shadow-md font-bold'
+                  : tab.id === 'ai-assistant'
+                    ? 'bg-[#FDE047] text-[#431407] font-bold shadow-sm hover:bg-[#FACC15]' // AI Assistant Special Style (Yellow)
+                    : `bg-white text-[#57534E] hover:bg-[#FFF7ED] hover:text-[#EA580C] ${tab.id === 'quiz' ? 'font-bold' : 'font-medium'}`
+              }`}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <main className="max-w-5xl mx-auto px-4 pb-20">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#E7E5E4] min-h-[600px]">
+          {activeTab === 'diagnosis' && <CyberDiagnosisContent />}
+          {activeTab === 'pc' && <PCSecurityContent />}
+          {activeTab === 'storage' && <StorageSecurityContent />}
+          {activeTab === 'homepage' && <HomepageSecurityContent />}
+          {activeTab === 'privacy' && <PrivacyProtectionContent />}
+          {activeTab === 'ai-assistant' && <AISecurityAssistant />}
+          {activeTab === 'quiz' && <QuizContent />}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="text-center py-8 text-[#A8A29E] text-sm leading-relaxed border-t border-[#E7E5E4] mt-12 bg-[#F5F5F4]">
+        <div className="max-w-5xl mx-auto px-4">
+          <p className="font-bold mb-2 text-[#78716C]">Copyrightⓒ 호남고등학교. All rights reserved</p>
+          <div className="space-y-1">
+            <p>주소 : (우 : 56202) 전북특별자치도 정읍시 정읍남로 1364-13</p>
+            <p className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              <span>전화 : 교무실 : 063-570-7815</span>
+              <span className="hidden sm:inline">|</span>
+              <span>행정실 : 063-570-7884~1</span>
+              <span className="hidden sm:inline">|</span>
+              <span>FAX : 063-537-7182</span>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// --- API Helper (Modified for Netlify Snippet Injection) ---
+const callGeminiAPI = async (prompt, systemInstruction) => {
+  // Netlify Snippet Injection을 통해 주입된 전역 변수(window.GEMINI_API_KEY)를 확인합니다.
+  // 로컬 개발 환경 등에서는 process.env.REACT_APP_GEMINI_API_KEY를 사용할 수도 있습니다.
+  const apiKey = (typeof window !== 'undefined' && window.GEMINI_API_KEY) 
+    ? window.GEMINI_API_KEY 
+    : (process.env.REACT_APP_GEMINI_API_KEY || ""); 
+
+  if (!apiKey) {
+    return "API 키가 설정되지 않았습니다. 관리자에게 문의하세요.";
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+  const payload = {
+    contents: [{ parts: [{ text: prompt }] }],
+    systemInstruction: { parts: [{ text: systemInstruction }] }
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) throw new Error('API 호출 실패');
+    
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "죄송합니다. 답변을 생성할 수 없습니다.";
+  } catch (error) {
+    console.error(error);
+    return "오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+  }
+};
+
+// --- Sub-Components for Content ---
+
+// NEW: AI Security Assistant Component
+const AISecurityAssistant = () => {
+  const [mode, setMode] = useState('qna'); // 'qna' or 'phishing'
+  const [inputText, setInputText] = useState('');
+  const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    setResponse('');
+    setInputText('');
+  };
+
+  const handleSubmit = async () => {
+    if (!inputText.trim()) return;
+    setLoading(true);
+    setResponse('');
+
+    let systemPrompt = "";
+    if (mode === 'qna') {
+      systemPrompt = "당신은 호남고등학교의 친절하고 전문적인 정보보안 담당관입니다. 교직원들이 보안 규정(비밀번호, 개인정보, 랜섬웨어 등)에 대해 물어보면 알기 쉽고 명확하게 답변해주세요. 답변 끝에는 항상 격려의 말을 덧붙여주세요.";
+    } else {
+      systemPrompt = "당신은 전문적인 피싱 메일 분석가입니다. 사용자가 입력한 이메일 내용을 분석하여 피싱(스팸, 사기) 가능성을 판단해주세요. 긴급성을 조장하거나, 출처가 불분명하거나, 개인정보를 요구하는 등의 의심스러운 징후를 찾아내어 설명하고, 절대 클릭하거나 답변하지 말 것을 경고해주세요.";
+    }
+
+    const result = await callGeminiAPI(inputText, systemPrompt);
+    setResponse(result);
+    setLoading(false);
+  };
+
+  return (
+    <div className="space-y-8 animate-fadeIn">
+      <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+        <Sparkles className="text-[#EA580C]" size={32} />
+        <h2 className="text-2xl font-bold text-[#431407]">AI 보안 비서</h2>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <button
+          onClick={() => handleModeChange('qna')}
+          className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+            mode === 'qna' 
+              ? 'border-[#EA580C] bg-[#FFF7ED] text-[#9A3412]' 
+              : 'border-[#E7E5E4] bg-white text-[#78716C] hover:bg-[#FAFAF9]'
+          }`}
+        >
+          <MessageSquare size={24} />
+          <span className="font-bold">보안 궁금증 해결</span>
+          <span className="text-xs opacity-75">비밀번호 규칙, 보안 절차 등 질문하기</span>
+        </button>
+        <button
+          onClick={() => handleModeChange('phishing')}
+          className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+            mode === 'phishing' 
+              ? 'border-[#DC2626] bg-[#FEF2F2] text-[#991B1B]' 
+              : 'border-[#E7E5E4] bg-white text-[#78716C] hover:bg-[#FAFAF9]'
+          }`}
+        >
+          <AlertOctagon size={24} />
+          <span className="font-bold">피싱 메일 판별</span>
+          <span className="text-xs opacity-75">의심스러운 메일 내용 분석하기</span>
+        </button>
+      </div>
+
+      <div className="bg-[#FAFAF9] p-6 rounded-xl border border-[#E7E5E4]">
+        <label className="block text-[#44403C] font-bold mb-2">
+          {mode === 'qna' ? '무엇이든 물어보세요' : '의심스러운 메일 내용을 붙여넣으세요'}
+        </label>
+        <textarea
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          placeholder={mode === 'qna' ? "예: 비밀번호는 얼마나 자주 변경해야 하나요? USB를 주웠는데 어떻게 하죠?" : "이메일 제목과 본문 내용을 여기에 붙여넣어 주세요..."}
+          className="w-full p-4 rounded-lg border border-[#D6D3D1] focus:ring-2 focus:ring-[#EA580C] focus:border-transparent outline-none min-h-[120px] resize-none mb-4"
+        />
+        <div className="flex justify-end">
+          <button
+            onClick={handleSubmit}
+            disabled={loading || !inputText.trim()}
+            className="flex items-center gap-2 bg-[#EA580C] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#C2410C] disabled:bg-[#D6D3D1] transition-all shadow-md hover:shadow-lg"
+          >
+            {loading ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
+            {mode === 'qna' ? 'AI에게 질문하기' : 'AI 분석 요청하기'}
+          </button>
+        </div>
+      </div>
+
+      {response && (
+        <div className="animate-fadeIn">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-[#44403C] mb-3">
+            <span className="text-2xl">🤖</span> AI 답변
+          </h3>
+          <div className="bg-white p-6 rounded-xl border border-[#E7E5E4] shadow-sm leading-relaxed whitespace-pre-line text-[#44403C]">
+            {response}
+          </div>
+          <p className="text-xs text-[#A8A29E] mt-2 text-right">* AI 답변은 참고용이며, 정확한 판단은 정보보안담당관에게 문의하세요.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 1. 사이버보안진단의 날
+const CyberDiagnosisContent = () => (
+  <div className="space-y-8 animate-fadeIn">
+    <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+      <Shield className="text-[#EA580C]" size={32} />
+      <h2 className="text-2xl font-bold text-[#431407]">사이버보안진단의 날</h2>
+    </div>
+
+    {/* Section 1: Info Box - Using warm orange/stone tones */}
+    <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-lg p-6">
+      <div className="flex items-start gap-3">
+        <div className="bg-[#EA580C] text-white p-2 rounded shadow-sm">📅</div>
+        <div>
+          <h3 className="text-[#9A3412] font-bold text-lg mb-2">매월 세 번째 수요일</h3>
+          <p className="text-[#431407]">내PC지키미, PC개인정보관리프로그램을 실행하여 점검 후 취약점을 모두 조치해야 합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Section 2: MyPC Keeper */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <span className="bg-[#FFEDD5] text-[#C2410C] px-2 py-1 rounded text-sm">1</span>
+        내PC지키미 (AhnLab ESA)
+      </h3>
+      <div className="overflow-hidden rounded-lg border border-[#E7E5E4]">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-[#EA580C] text-white">
+            <tr>
+              <th className="p-3 font-semibold">구분</th>
+              <th className="p-3 font-semibold">조치 기준</th>
+              <th className="p-3 font-semibold">비고</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#E7E5E4]">
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#44403C]">업무망</td>
+              <td className="p-3 text-[#EA580C] font-bold">100점</td>
+              <td className="p-3 text-[#78716C]">부서 공용PC 포함</td>
+            </tr>
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#44403C]">학생망</td>
+              <td className="p-3 text-[#EA580C] font-bold">75점</td>
+              <td className="p-3 text-[#78716C]">10개 항목 점검</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* Section 3: Privacy Management */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <span className="bg-[#FFEDD5] text-[#C2410C] px-2 py-1 rounded text-sm">2</span>
+        개인정보파일 관리 (AhnLab Privacy Management 5.0)
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] space-y-2 mb-4">
+        <CheckItem text="법적근거 없는 고유식별정보 즉시 삭제" />
+        <CheckItem text="주민등록번호 100% 암호화 조치" />
+        <CheckItem text="보유기간 경과한 파일 즉시 삭제" />
+      </div>
+      
+      <div className="bg-[#FEF2F2] border border-[#FCA5A5] rounded-lg p-5">
+        <h4 className="flex items-center gap-2 text-[#DC2626] font-bold mb-2">
+          <AlertTriangle size={18} /> 고유식별정보 관리 주의사항
+        </h4>
+        <p className="text-sm text-[#7F1D1D] font-medium mb-1">고유식별정보: 주민등록번호, 여권번호, 운전면허번호, 외국인등록번호</p>
+        <ul className="text-sm text-[#991B1B] ml-5 list-disc space-y-1">
+          <li>법적 근거 없는 고유식별정보는 즉시 삭제</li>
+          <li>고유식별정보는 상시 암호화 저장하여 보관</li>
+        </ul>
+      </div>
+    </div>
+
+    {/* Section 4: Homepage Check */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <span className="bg-[#FFEDD5] text-[#C2410C] px-2 py-1 rounded text-sm">3</span>
+        홈페이지 게시 자료 점검
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] space-y-2">
+        <CheckItem text="메뉴(게시판)별 담당자는 비공개 업무자료 및 개인정보 노출 여부 점검" />
+        <CheckItem text="공개기한이 지났거나 불필요한 게시글 정비" />
+        <CheckItem text="학교 자체 운영 웹사이트 포함하여 전체 점검" />
+      </div>
+    </div>
+  </div>
+);
+
+// 2. PC 보안관리
+const PCSecurityContent = () => (
+  <div className="space-y-8 animate-fadeIn">
+    <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+      <Monitor className="text-[#EA580C]" size={32} />
+      <h2 className="text-2xl font-bold text-[#431407]">PC 보안 관리</h2>
+    </div>
+
+    {/* Info Banner - Using Green to match "Digital Transformation" accents */}
+    <div className="bg-[#15803D] text-white p-4 rounded-lg shadow-sm">
+      <h3 className="font-bold flex items-center gap-2 mb-1">
+        <FileText size={18} /> 정보보안 기본지침 제72조
+      </h3>
+      <p className="text-[#DCFCE7] text-sm">개별사용자는 기관에서 지급받은 단말기 사용과 관련된 일체의 보안관리 책임이 있습니다.</p>
+    </div>
+
+    {/* Password Settings */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#44403C] mb-3">
+        <Lock size={20} className="text-[#EA580C]" /> 비밀번호 설정 (필수)
+      </h3>
+      <div className="overflow-hidden rounded-lg border border-[#E7E5E4]">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-[#EA580C] text-white">
+            <tr>
+              <th className="p-3 w-1/4">설정 위치</th>
+              <th className="p-3">설정 방법</th>
+              <th className="p-3 w-1/6">비고</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#E7E5E4]">
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#EA580C]">부팅(CMOS) 시</td>
+              <td className="p-3 text-[#44403C]">단말기 메인보드 바이오스에서 설정</td>
+              <td className="p-3 text-center bg-[#FAFAF9] font-bold text-[#57534E]">필수</td>
+            </tr>
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#059669]">윈도우 로그온 시</td>
+              <td className="p-3 text-[#44403C]">윈도우 시작 시 로그온 화면</td>
+              <td className="p-3 text-center bg-[#FAFAF9] font-bold text-[#57534E]">필수</td>
+            </tr>
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#D97706]">화면보호기</td>
+              <td className="p-3 text-[#44403C]">10분 이상 미사용시 화면보호 설정</td>
+              <td className="p-3 text-center bg-[#FAFAF9] font-bold text-[#57534E]">필수</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* File Processing */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#44403C] mb-3">
+        <FileText size={20} className="text-[#D97706]" /> 중요자료 및 개인정보파일 처리
+      </h3>
+      <div className="overflow-hidden rounded-lg border border-[#E7E5E4]">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-[#EA580C] text-white">
+            <tr>
+              <th className="p-3 w-1/3">파일 유형</th>
+              <th className="p-3">처리 방법</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#E7E5E4]">
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#44403C]">주민등록번호 포함 개인정보파일</td>
+              <td className="p-3 text-[#44403C]">
+                <p>법령근거 없다면 → <span className="text-[#DC2626] font-bold">즉시 삭제</span></p>
+                <p>법령근거 있다면 → 개인정보관리프로그램 암호화 또는 개별 프로그램 파일 암호화</p>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#44403C]">개인정보 포함 파일, 중요자료 파일</td>
+              <td className="p-3 text-[#44403C]">
+                <p className="font-bold mb-1">개별 프로그램 파일 암호화</p>
+                <ul className="list-disc ml-4 text-[#57534E]">
+                  <li>한글: 저장하기 → 문서암호 설정</li>
+                  <li>엑셀: 저장하기 → 도구:일반옵션 → 암호 설정</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* Ransomware */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#44403C] mb-3">
+        <Shield size={20} className="text-[#16A34A]" /> 랜섬웨어 피해 예방 수칙
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] space-y-2 mb-4">
+        <CheckItem text="출처가 불분명한 이메일 첨부파일이나 웹사이트(URL) 열람 자제" />
+        <CheckItem text="신뢰할 수 없는 사이트에서 파일 다운로드 및 실행 주의" />
+        <CheckItem text="유튜브 동영상 다운로드 시 각별한 주의 (랜섬웨어 발생 빈번)" />
+        <CheckItem text="업무상 불필요한 프로그램 설치 금지 및 공유 폴더 삭제" />
+        <CheckItem text="인터넷 자료 다운로드 시 최신 백신으로 바이러스 검사" />
+        <CheckItem text="개인별 중요 업무자료는 정기적으로 오프라인 백업" />
+      </div>
+
+      <div className="bg-[#DC2626] text-white p-5 rounded-lg shadow-md">
+        <h4 className="flex items-center gap-2 font-bold text-lg mb-3">
+          <AlertTriangle className="text-[#FEF3C7]" /> 랜섬웨어 사고 발생 시 조치
+        </h4>
+        <div className="space-y-1 ml-6 text-sm">
+          <p><strong>1단계:</strong> 감염 장비 랜선 분리, 포맷 금지</p>
+          <p><strong>2단계:</strong> 학교 정보보안담당관에 신고</p>
+          <p><strong>3단계:</strong> 상위기관에 즉시 침해사고 신고</p>
+          <p className="mt-2 text-[#FEF2F2] font-medium">⚠️ 주의: 랜섬웨어 공격자와 기관·직원의 개별적인 금전거래 금지</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// 3. 저장매체 보안
+const StorageSecurityContent = () => (
+  <div className="space-y-8 animate-fadeIn">
+    <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+      <Save className="text-[#EA580C]" size={32} />
+      <h2 className="text-2xl font-bold text-[#431407]">휴대용 저장매체 보안 관리</h2>
+    </div>
+
+    {/* Info Banner */}
+    <div className="bg-[#D97706] text-white p-6 rounded-lg shadow-sm">
+      <h3 className="font-bold flex items-center gap-2 mb-1 text-lg">
+        <Save size={20} /> 대상 매체
+      </h3>
+      <p className="text-[#FFF7ED]">USB메모리, SD카드, 외장형 하드디스크 등</p>
+    </div>
+
+    {/* Register Management */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <FileText size={20} /> 관리대장 등록 관리
+      </h3>
+      <div className="overflow-hidden rounded-lg border border-[#E7E5E4]">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-[#EA580C] text-white">
+            <tr>
+              <th className="p-3 w-1/6">구분</th>
+              <th className="p-3 w-1/4">용도</th>
+              <th className="p-3 w-1/4">관리방법</th>
+              <th className="p-3">보관장소</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#E7E5E4]">
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#44403C]">일반용</td>
+              <td className="p-3 text-[#44403C]">업무관련 일반자료</td>
+              <td className="p-3 text-[#44403C]">휴대용 저장매체 관리대장(일반용) 작성</td>
+              <td className="p-3 text-[#44403C]">개인서랍, 캐비닛 등에 안전하게 보관</td>
+            </tr>
+            <tr>
+              <td className="p-3 bg-[#FAFAF9] font-medium text-[#DC2626]">비밀용</td>
+              <td className="p-3 text-[#44403C]">비밀등급별 자료 (대외비 등)</td>
+              <td className="p-3 text-[#44403C]">휴대용 저장매체 관리대장(비밀용) 작성</td>
+              <td className="p-3 text-[#44403C]">이중 캐비닛 또는 금고</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* In/Out Management */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <CheckCircle size={20} /> 반출입 관리
+      </h3>
+      <div className="bg-[#FAFAF9] p-6 rounded-lg border border-[#E7E5E4] space-y-3">
+        <CheckItem text="휴대용 저장매체(전산장비 포함) 반출입 시 '반출입 관리대장' 작성" />
+        <CheckItem text="반출 시: 비공개 중요자료 삭제 여부 확인" />
+        <CheckItem text="반입 시: 악성코드 감염 여부 확인" />
+        <CheckItem text="PC 등 정보화기기 폐기, 재활용, 외부수리 시 내부 개인정보 반드시 삭제" />
+      </div>
+    </div>
+
+    {/* Disposal */}
+    <div className="bg-[#FFF7ED] border-l-4 border-[#EA580C] p-5 rounded-r-lg">
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#44403C] mb-2">
+        🗑️ 불용처리 관리
+      </h3>
+      <p className="text-[#57534E] text-sm leading-relaxed">
+        휴대용 저장매체를 불용 처리하거나 재사용할 경우 <span className="font-bold text-[#EA580C]">'불용처리 확인서'</span>를 작성하여 정보보안담당관의 확인을 받아야 합니다.
+      </p>
+    </div>
+  </div>
+);
+
+// 4. 홈페이지 보안
+const HomepageSecurityContent = () => (
+  <div className="space-y-8 animate-fadeIn">
+    <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+      <Globe className="text-[#EA580C]" size={32} />
+      <h2 className="text-2xl font-bold text-[#431407]">홈페이지 및 SNS 보안 관리</h2>
+    </div>
+
+    {/* Homepage Post Security */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <FileText size={20} /> 홈페이지 게시자료 보안
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] space-y-2">
+        <CheckItem text="업무자료 게시 전 자료 내용 사전 검토" />
+        <CheckItem text="비공개 업무자료가 게시되지 않도록 주의" />
+        <CheckItem text="비공개 업무자료 무단 게시 여부 정기적 점검" />
+        <CheckItem text="발견 즉시 삭제 조치" />
+      </div>
+    </div>
+
+    {/* SNS Security */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        <Monitor size={20} /> SNS 보안 관리 (유튜브, 인스타그램, 카카오스토리 등)
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4]">
+        <div className="mb-4">
+          <h4 className="font-bold text-[#EA580C] text-sm mb-2 flex items-center gap-1">🔒 계정 관리</h4>
+          <div className="space-y-2 pl-2">
+            <CheckItem text="공유 사용 금지, 미사용 계정 즉시 삭제" />
+            <CheckItem text="비밀번호는 숫자-문자-특수문자 혼합하여 복잡하게 설정" />
+            <CheckItem text="비밀번호 주기적 변경" />
+          </div>
+        </div>
+        <div>
+          <h4 className="font-bold text-[#16A34A] text-sm mb-2 flex items-center gap-1">🛡️ 보안기능 설정</h4>
+          <div className="space-y-2 pl-2">
+            <CheckItem text="OTP 또는 생체인증 등 2단계 인증 설정" />
+            <CheckItem text="접속 단말기 설정 및 해외 로그인 차단" />
+            <CheckItem text="관리단말기 OS·백신 최신 업데이트 적용" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Printer & Home PC */}
+    <div className="grid md:grid-cols-2 gap-6">
+      <div>
+        <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+          🖨️ 디지털복합기 보안관리
+        </h3>
+        <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] h-full space-y-2">
+          <CheckItem text="작업문서(복사, 스캔자료 등)가 저장되지 않도록 설정" />
+          <CheckItem text="최신 펌웨어로 업데이트" />
+          <CheckItem text="복합기 관리자 패스워드 주기적 변경" />
+        </div>
+      </div>
+      <div>
+        <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+          🏠 재택근무 시 개인 PC 보안 관리
+        </h3>
+        <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] h-full space-y-2">
+          <CheckItem text="운영체제 및 응용프로그램 최신 보안 업데이트" />
+          <CheckItem text="백신 보안패치 최신 업데이트 및 주기적 바이러스 검사" />
+          <CheckItem text="가정 인터넷 공유기 최신SW 업데이트 및 비밀번호 설정" />
+          <CheckItem text="개인영업장 사설 와이파이, 공용PC 이용한 재택근무 자제" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// 5. 개인정보보호
+const PrivacyProtectionContent = () => (
+  <div className="space-y-8 animate-fadeIn">
+    <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+      <UserCheck className="text-[#EA580C]" size={32} />
+      <h2 className="text-2xl font-bold text-[#431407]">개인정보보호 교육</h2>
+    </div>
+
+    {/* Info Banner */}
+    <div className="bg-[#EA580C] text-white p-5 rounded-lg shadow-sm">
+      <h3 className="font-bold flex items-center gap-2 mb-1">
+        <FileText size={18} /> 개인정보 내부 관리계획 주요 내용
+      </h3>
+      <p className="text-[#FFF7ED] text-sm">문서번호: 호남고등학교-8560(2025. 7. 1.)</p>
+    </div>
+
+    {/* Plan Details */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        📊 내부 관리계획 구성
+      </h3>
+      <div className="bg-[#FAFAF9] p-5 rounded-lg border border-[#E7E5E4] grid md:grid-cols-2 gap-3">
+        <CheckItem text="개인정보 보호 조직에 관한 구성 및 운영" />
+        <CheckItem text="개인정보의 기술적·물리적 안전조치" />
+        <CheckItem text="개인정보 보호 교육" />
+        <CheckItem text="개인정보 처리의 위탁 및 수탁자 관리감독" />
+        <CheckItem text="개인정보의 목적 외 이용 및 제3자 제공" />
+        <CheckItem text="개인정보 파기계획 및 절차" />
+        <CheckItem text="개인정보 유출 등 신고체계" />
+      </div>
+    </div>
+
+    {/* Warning 1: Minimization */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        ⚠️ 유의사항 ① 필요 최소한의 개인정보 처리
+      </h3>
+      <div className="bg-[#F97316] text-white p-4 rounded-t-lg">
+        <h4 className="font-bold mb-2">침해사례</h4>
+        <ul className="text-sm list-disc ml-5 space-y-1">
+          <li>사생활 침해 우려가 있는 개인정보(학부모의 직업, 학력, 주거형태 등)를 정보주체의 동의 없이 수집</li>
+          <li>법령의 근거 없는 업무 처리 시 정보주체 동의 없이 수집·이용</li>
+        </ul>
+      </div>
+      <div className="bg-white border-x border-b border-[#E7E5E4] p-5 rounded-b-lg space-y-2">
+        <h4 className="font-bold text-[#16A34A] mb-2">🔵 준수사항</h4>
+        <CheckItem text="정보주체의 사생활 침해를 최소화하는 방법으로 개인정보 처리" />
+        <CheckItem text="필요 최소 정보 외의 개인정보 수집 동의 거부 시 부당한 불이익 금지" />
+        <CheckItem text="법령 근거 없는 개인정보 수집·이용 시 반드시 동의" />
+        <CheckItem text="학년초 일괄 동의서는 업무목적별로 구분하여 각각 동의" />
+        <CheckItem text="만14세 미만 아동의 개인정보 처리 시 법정대리인 동의 필수" />
+      </div>
+    </div>
+
+    {/* Warning 2: Unique ID */}
+    <div>
+      <h3 className="flex items-center gap-2 text-lg font-bold text-[#EA580C] mb-3">
+        ⚠️ 유의사항 ② 고유식별정보, 민감정보 처리 제한
+      </h3>
+      <div className="bg-[#F97316] text-white p-4 rounded-t-lg">
+        <h4 className="font-bold mb-2">침해사례</h4>
+        <p className="text-sm">법률 근거 없이 주민등록번호가 포함된 자료를 요구 → <span className="font-bold text-[#FEF3C7]">주민등록번호 수집 법정주의 위반</span></p>
+      </div>
+      <div className="bg-white border-x border-b border-[#E7E5E4] p-5 rounded-b-lg space-y-2">
+        <h4 className="font-bold text-[#16A34A] mb-2">🔵 준수사항</h4>
+        <CheckItem text="고유식별정보, 민감정보는 원칙적으로 처리 금지" />
+        <CheckItem text="처리 시 반드시 법적근거 또는 별도 동의 필수" />
+        <CheckItem text="저장 시 암호화 조치 필수" />
+      </div>
+    </div>
+  </div>
+);
+
+// 6. 이해도 점검 퀴즈
+const QuizContent = () => {
+  const [answers, setAnswers] = useState({});
+  const [showResult, setShowResult] = useState({});
+
+  const questions = [
+    {
+      id: 1,
+      question: "사이버보안진단의 날은 언제인가요?",
+      options: ["매월 첫 번째 수요일", "매월 두 번째 수요일", "매월 세 번째 수요일", "매월 마지막 수요일"],
+      answer: 2
+    },
+    {
+      id: 2,
+      question: "내PC지키미 점검에서 업무망의 조치 기준은?",
+      options: ["75점", "85점", "90점", "100점"],
+      answer: 3
+    },
+    {
+      id: 3,
+      question: "화면보호기는 몇 분 이상 미사용 시 설정해야 하나요?",
+      options: ["5분", "10분", "15분", "20분"],
+      answer: 1
+    },
+    {
+      id: 4,
+      question: "고유식별정보에 해당하지 않는 것은?",
+      options: ["주민등록번호", "여권번호", "전화번호", "외국인등록번호"],
+      answer: 2
+    },
+    {
+      id: 5,
+      question: "랜섬웨어 사고 발생 시 첫 번째 조치는?",
+      options: ["즉시 포맷", "감염 장비 랜선 분리", "백신 실행", "전원 끄기"],
+      answer: 1
+    }
+  ];
+
+  const handleCheck = (qId, correctIdx) => {
+    setShowResult(prev => ({ ...prev, [qId]: true }));
+  };
+
+  const handleSelect = (qId, optIdx) => {
+    if (showResult[qId]) return;
+    setAnswers(prev => ({ ...prev, [qId]: optIdx }));
+  };
+
+  const progress = Math.round((Object.keys(answers).length / questions.length) * 100);
+
+  return (
+    <div className="space-y-8 animate-fadeIn">
+      <div className="flex items-center gap-3 border-b-2 border-[#FED7AA] pb-4 mb-6">
+        <HelpCircle className="text-[#EA580C]" size={32} />
+        <h2 className="text-2xl font-bold text-[#431407]">이해도 점검 퀴즈</h2>
+      </div>
+
+      <div className="w-full bg-[#E7E5E4] rounded-full h-2.5 mb-6">
+        <div className="bg-[#EA580C] h-2.5 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+        <p className="text-right text-xs text-[#78716C] mt-1">진행률: {progress}%</p>
+      </div>
+
+      <div className="space-y-6">
+        {questions.map((q) => (
+          <div key={q.id} className="bg-[#FAFAF9] p-6 rounded-xl border border-[#E7E5E4]">
+            <h3 className="font-bold text-lg mb-4 text-[#431407]">{q.id}. {q.question}</h3>
+            <div className="space-y-2">
+              {q.options.map((opt, idx) => {
+                const isSelected = answers[q.id] === idx;
+                const isCorrect = idx === q.answer;
+                const isWrong = isSelected && !isCorrect;
+                
+                let optionStyle = "border-[#E7E5E4] hover:bg-[#F5F5F4]";
+                if (showResult[q.id]) {
+                    if (isCorrect) optionStyle = "bg-green-100 border-green-500 text-green-700 font-bold";
+                    else if (isWrong) optionStyle = "bg-red-100 border-red-500 text-red-700";
+                    else optionStyle = "opacity-50 border-[#E7E5E4]";
+                } else if (isSelected) {
+                    optionStyle = "bg-[#FFF7ED] border-[#EA580C] text-[#EA580C]";
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelect(q.id, idx)}
+                    className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-2 ${optionStyle}`}
+                  >
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected || (showResult[q.id] && isCorrect) ? 'border-current' : 'border-[#A8A29E]'}`}>
+                        {(isSelected || (showResult[q.id] && isCorrect)) && <div className="w-2 h-2 rounded-full bg-current"></div>}
+                    </div>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {!showResult[q.id] && (
+              <button
+                onClick={() => handleCheck(q.id, q.answer)}
+                disabled={answers[q.id] === undefined}
+                className="mt-4 px-6 py-2 bg-[#EA580C] text-white rounded-lg font-medium hover:bg-[#C2410C] disabled:bg-[#D6D3D1] disabled:cursor-not-allowed transition-colors"
+              >
+                정답 확인
+              </button>
+            )}
+             {showResult[q.id] && (
+              <div className={`mt-4 p-3 rounded-lg text-sm font-bold ${answers[q.id] === q.answer ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {answers[q.id] === q.answer ? "🎉 정답입니다!" : "❌ 오답입니다. 다시 확인해보세요."}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Helper Component for Checklist Items
+const CheckItem = ({ text }) => (
+  <div className="flex items-start gap-2">
+    <span className="text-[#16A34A] mt-1 font-bold">✔</span>
+    <span className="text-[#44403C] text-sm leading-relaxed">{text}</span>
+  </div>
+);
+
+export default App;
